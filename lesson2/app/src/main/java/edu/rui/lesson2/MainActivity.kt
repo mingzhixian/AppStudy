@@ -19,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
         TabLayoutMediator(tabLayout,viewpager){ tab,pos->
             val item = adapter.getItem(pos)
-
             tab.text = item
         }.attach()
     }
