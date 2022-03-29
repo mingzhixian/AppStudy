@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">lesson2</string>
+    <string name="bottom_item1">微信</string>
+    <string name="bottom_item2">通讯录</string>
+    <string name="bottom_item3">发现</string>
+    <string name="bottom_item4">我</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
