@@ -1,0 +1,15 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.Lesson4" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/app_back</item>
+        <item name="colorPrimaryDark">@color/app_back</item>
+        <item name="windowActionBar">false</item>
+        <!--windowNoTitle可以设置没有标题栏-->
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!--悬浮按钮主题-->
+    <style name="todo_add_theme">
+        <item name="colorAccent">@color/todo_add_day</item>
+    </style>
+</resources>
