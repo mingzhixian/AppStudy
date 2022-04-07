@@ -4,17 +4,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 
-class TodoAdapter(val todoItems: List<TodoItem>) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
+class TodoAdapter(val todoItems: List<TodoItem>,detail: ConstraintLayout) : RecyclerView.Adapter<TodoAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val content: TextView = view.findViewById(R.id.todo_item_content)
         val status: ImageView = view.findViewById(R.id.todo_item_status)
+        val todoItem: LinearLayout = view.findViewById(R.id.todo_item)
+        val todoDetail: ConstraintLayout =detail
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_item,parent,false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.todo_item, parent, false)
         return ViewHolder(view)
     }
 
@@ -25,6 +30,9 @@ class TodoAdapter(val todoItems: List<TodoItem>) : RecyclerView.Adapter<TodoAdap
             2 -> holder.status.setImageResource(R.drawable.status_bad)
             1 -> holder.status.setImageResource(R.drawable.status_ok)
             0 -> holder.status.setImageResource(R.drawable.status_todo)
+        }
+        holder.todoItem.setOnClickListener {
+            holder.todoDetail.visibility = View.VISIBLE
         }
     }
 
