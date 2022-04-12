@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -13,40 +15,29 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginTop
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.*
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+
 class MainActivity : AppCompatActivity(), View.OnClickListener {
-    val todoItems = arrayListOf<TodoItem>()
+    var detailPosition = 0
+    private var todoAdapter: TodoAdapter?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //获取数据
-        initData()
-
         //生成界面
+        todoAdapter=TodoAdapter(this)
         val recycler = findViewById<RecyclerView>(R.id.menu)
         recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter =
-            TodoAdapter(todoItems, this)
+        recycler.adapter =todoAdapter
 
         //设置监听
         this.findViewById<FloatingActionButton>(R.id.todo_add).setOnClickListener(this)
         this.findViewById<ConstraintLayout>(R.id.todo_detail).setOnClickListener(this)
         this.findViewById<TextView>(R.id.todo_detail_cancel).setOnClickListener(this)
         this.findViewById<TextView>(R.id.todo_detail_ok).setOnClickListener(this)
-    }
-
-    //初始化数据
-    private fun initData() {
-        //数据库获取
-        for (i in 0..4) {
-            todoItems.add(TodoItem("第一条待办", 0))
-            todoItems.add(TodoItem("第二条待办", 1))
-            todoItems.add(TodoItem("第三条待办", 1))
-            todoItems.add(TodoItem("第四条待办", 0))
-        }
+        titleOnScroll()
     }
 
     //吸顶效果
@@ -54,20 +45,19 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         val title = this.findViewById<TextView>(R.id.todo_title)
         val recyclerView = this.findViewById<RecyclerView>(R.id.menu)
         recyclerView.addOnScrollListener(object : OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-            }
 
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy>0){
-                    if (title.marginTop>0){
-                        title.layoutParams.height=title.marginTop-dy
+                if (dy > 0) {
+                    if (title.marginTop > 0) {
                         return
-                    }else if (title.marginBottom>0){
-                        title.layoutParams.height=title.marginTop-dy
+                    }
+                    if (title.marginBottom > 0) {
                         return
-                    }else if (title.textSize>24){}
+                    }
+                    if (title.textSize > 24) {
+                        return
+                    }
                 }
             }
         })
@@ -75,11 +65,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     //展示输入框
     override fun onClick(view: View?) {
-        var id: Int? = view?.id
+        val id: Int? = view?.id
         val todoDetail = this.findViewById<ConstraintLayout>(R.id.todo_detail)
         val todoAdd = this.findViewById<FloatingActionButton>(R.id.todo_add)
         when (id) {
             R.id.todo_add -> {
+                detailPosition= todoAdapter?.todoItems!!.size
                 todoAdd.visibility = GONE
                 todoDetail.apply {
                     alpha = 0f
@@ -91,6 +82,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
             }
             R.id.todo_detail_ok -> {
+                todoAdapter?.detailOk(
+                    detailPosition,
+                    todoDetail.findViewById<EditText>(R.id.todo_item_edit).text.toString()
+                )
+                (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(this@MainActivity.currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
                 todoDetail.apply {
                     animate()
                         .alpha(0f)

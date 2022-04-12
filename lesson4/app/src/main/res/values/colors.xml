@@ -12,4 +12,6 @@
     <color name="font_normal">#cdcdcd</color>
     <color name="todo_add_day">#707070</color>
     <color name="detail_bc">#baaeb0af</color>
+    <color name="item_done">#6ed14a</color>
+    <color name="item_delete">#bb2424</color>
 </resources>
